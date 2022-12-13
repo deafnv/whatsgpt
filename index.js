@@ -73,13 +73,17 @@ async function main() {
       )
         return;
 
+      //Filter out mentions from message body
+      const body = message.body.replaceAll(/(?<!\S)@\S*/g, '').trim();
+
+      message.react('👍');
       // Do we already have a conversation for this sender, or is the user resetting this conversation?
       if (
         conversations[message._data.id.remote] === undefined ||
-        message.body === "reset"
+        body === "reset"
       ) {
         console.log(`Creating new conversation for ${message._data.id.remote}`);
-        if (message.body === "reset") {
+        if (body === "reset") {
           message.reply("Conversation reset");
           return;
         }
@@ -87,7 +91,7 @@ async function main() {
       }
 
       const response = await conversations[message._data.id.remote].sendMessage(
-        message.body
+        body
       );
 
       console.log(`Response: ${response}`);
