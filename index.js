@@ -7,7 +7,7 @@ PASSWORD=
 
 See documentation for help
 */
-import { ChatGPTAPI, getOpenAIAuth } from "chatgpt";
+import { ChatGPTAPI, getBrowser, getOpenAIAuth } from "chatgpt";
 import whatsappweb from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
@@ -41,9 +41,13 @@ whatsapp.on("ready", () => {
 });
 
 async function main() {
+  const browser = await getBrowser({
+    executablePath: process.env.CHROME_PATH
+  });
   const openAIAuth = await getOpenAIAuth({
     email: process.env.EMAIL,
     password: process.env.PASSWORD,
+    browser: browser
   });
 
   const chatgpt = new ChatGPTAPI({
